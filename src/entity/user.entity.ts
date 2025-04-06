@@ -8,6 +8,11 @@ import {
   VersionColumn,
 } from 'typeorm';
 
+export enum Role {
+  USER = 'user',
+  ADMIN = 'admin',
+}
+
 @Entity()
 export class UserModel {
   // @PrimaryGeneratedColumn() : 자동으로 생성되는 PK
@@ -36,13 +41,20 @@ export class UserModel {
     // 기본값이 true
     // find(), findOne() 등을 실행할 때 기본으로 값을 불러올지 결정
     // false 시 title 표시 X
-    select: false,
+    select: true,
     // 아무 것도 입력하지 않았을 때의 기본값
     default: 'Default Title',
     // 칼럼 중에서 유일한 값이 되어야 하는지 (기본값: false)
-    unique: true,
+    unique: false,
   })
   title: string;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.USER,
+  })
+  role: Role;
 
   // 데이터가 생성되는 날짜와 시간이 자동으로 입력됨
   @CreateDateColumn()

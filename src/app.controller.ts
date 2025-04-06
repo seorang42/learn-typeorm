@@ -19,19 +19,27 @@ export class AppController {
 
   @Post('users')
   postUser() {
-    return this.userRepository.save({
-      title: 'test title',
-    });
+    return this.userRepository.save({});
   }
 
   @Get('users')
   getUsers() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      // 가져올 값들을 직접 명시
+      select: {
+        id: true,
+        title: true,
+      },
+    });
   }
 
   @Patch('users/:id')
   async patchUser(@Param('id') id: string) {
     const user = await this.userRepository.findOne({
+      select: {
+        id: true,
+        title: true,
+      },
       where: {
         id: parseInt(id),
       },

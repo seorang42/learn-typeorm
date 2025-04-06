@@ -18,7 +18,30 @@ export class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    // 데이터베이스에서 인지하는 칼럼 타입
+    // 자동으로 유추됨
+    type: 'varchar',
+    // 데이터베이스 칼럼 이름
+    name: '_title',
+    // 값의 길이
+    // 입력할 수 있는 글자의 길이가 300
+    // 지정할 수 있는 타입이 정해져 있음 (text X varchar O)
+    length: 300,
+    // null이 가능한지
+    nullable: true,
+    // false면 처음 저장할 때만 값 지정 가능
+    // 이후에는 값 변경 불가능 (typeorm 0.3.20 이상에서 미작동)
+    update: true,
+    // 기본값이 true
+    // find(), findOne() 등을 실행할 때 기본으로 값을 불러올지 결정
+    // false 시 title 표시 X
+    select: false,
+    // 아무 것도 입력하지 않았을 때의 기본값
+    default: 'Default Title',
+    // 칼럼 중에서 유일한 값이 되어야 하는지 (기본값: false)
+    unique: true,
+  })
   title: string;
 
   // 데이터가 생성되는 날짜와 시간이 자동으로 입력됨

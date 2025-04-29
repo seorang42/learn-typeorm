@@ -9,12 +9,15 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role, UserModel } from './entity/user.entity';
 import { Repository } from 'typeorm';
+import { ProfileModel } from './entity/profile.entity';
 
 @Controller()
 export class AppController {
   constructor(
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
+    @InjectRepository(ProfileModel)
+    private readonly profileRepository: Repository<ProfileModel>,
   ) {}
 
   @Post('users')
@@ -26,7 +29,11 @@ export class AppController {
 
   @Get('users')
   getUsers() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      relations: {
+        profile: true,
+      },
+    });
   }
 
   @Patch('users/:id')
@@ -41,6 +48,20 @@ export class AppController {
       throw new NotFoundException();
     }
 
-    return this.userRepository.save({ ...user, title: user.title + '0' });
+    return this.userRepository.save({ ...user });
+  }
+
+  @Post('user/profile')
+  async createUserAndProfile() {
+    const user = await this.userRepository.save({
+      email: 'asdf@example.com',
+    });
+
+    const profile = await this.profileRepository.save({
+      profileImg: 'asdf.jpg',
+      user,
+    });
+
+    return user;
   }
 }

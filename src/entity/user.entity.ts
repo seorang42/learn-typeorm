@@ -4,12 +4,14 @@ import {
   Entity,
   Generated,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
 import { ProfileModel } from './profile.entity';
+import { PostModel } from './post.entity';
 
 export enum Role {
   USER = 'user',
@@ -84,4 +86,7 @@ export class UserModel {
   @OneToOne(() => ProfileModel, (profile) => profile.user)
   @JoinColumn() // Profile column에 있는 id를 User에서 가지고 있게 됨
   profile: ProfileModel;
+
+  @OneToMany(() => PostModel, (post) => post.author)
+  posts: PostModel[];
 }

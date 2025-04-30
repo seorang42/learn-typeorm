@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -35,12 +36,7 @@ export class AppController {
 
   @Get('users')
   getUsers() {
-    return this.userRepository.find({
-      relations: {
-        profile: true,
-        posts: true,
-      },
-    });
+    return this.userRepository.find({});
   }
 
   @Patch('users/:id')
@@ -58,16 +54,24 @@ export class AppController {
     return this.userRepository.save({ ...user });
   }
 
+  @Delete('user/profile/:id')
+  async deleteProfile(@Param('id') id: string) {
+    await this.profileRepository.delete(+id);
+  }
+
   @Post('user/profile')
   async createUserAndProfile() {
     const user = await this.userRepository.save({
       email: 'asdf@example.com',
+      profile: {
+        profileImg: 'asdf.jpg',
+      },
     });
 
-    const profile = await this.profileRepository.save({
-      profileImg: 'asdf.jpg',
-      user,
-    });
+    // const profile = await this.profileRepository.save({
+    //   profileImg: 'asdf.jpg',
+    //   user,
+    // });
 
     return user;
   }

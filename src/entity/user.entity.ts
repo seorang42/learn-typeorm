@@ -83,7 +83,21 @@ export class UserModel {
   @Generated('increment')
   additionalId: number;
 
-  @OneToOne(() => ProfileModel, (profile) => profile.user)
+  @OneToOne(() => ProfileModel, (profile) => profile.user, {
+    // find() 실행할 때마다 항상 같이 가져올 relationship
+    eager: true,
+    // 저장할 때 relation을 한번에 같이 저장 가능
+    cascade: true,
+    // null 값을 허용할 것인지 설정
+    nullable: true,
+    // 관계가 삭제됐을 때
+    // NO ACTION -> 아무 것도 안함
+    // CASCADE -> 참조하는 Row도 같이 삭제
+    // SET NULL -> 참조하는 Row에서 참조 id를 null로 변경
+    // SET DEFAULT -> 기본 세팅으로 설정 (테이블의 기본 세팅)
+    // RESTRICT -> 참조하고 있는 Row가 있는 경우 참조 당하는 Row 삭제 불가
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn() // Profile column에 있는 id를 User에서 가지고 있게 됨
   profile: ProfileModel;
 

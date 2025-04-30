@@ -40,6 +40,82 @@ export class AppController {
     private readonly tagRepository: Repository<TagModel>,
   ) {}
 
+  @Post('sample')
+  async sample() {
+    // create
+    // 모델에 해당되는 객체 생성 - 저장하지 않음
+    // const user1 = this.userRepository.create({
+    //   email: 'test@example.com',
+    // });
+
+    // 저장
+    // const user2 = await this.userRepository.save({
+    //   email: 'test@example.com',
+    // });
+
+    // preload
+    // 입력된 값을 기반으로 데이터베이스에 있는 데이터를 불러오고
+    // 추가 입력된 값으로 데이터베이스에서 가져온 값들을 대체함
+    // 저장하지는 않음
+    // const user3 = await this.userRepository.preload({
+    //   id: 101,
+    //   email: 'testtest@example.com',
+    // });
+
+    // 삭제하기
+    // await this.userRepository.delete(101);
+
+    // 값을 증가시킴
+    // await this.userRepository.increment({ id: 11 }, 'count', 50);
+
+    // 값을 감소시킴
+    // await this.userRepository.decrement({ id: 1 }, 'count', 1);
+
+    // 개수 카운팅하기
+    // const count = await this.userRepository.count({
+    //   where: {
+    //     email: ILike('%0%'),
+    //   },
+    // });
+
+    // 합산
+    // const sum = await this.userRepository.sum('count', {
+    //   id: LessThan(20),
+    // });
+
+    // 평균
+    // const average = await this.userRepository.average('count', {
+    //   id: LessThan(20),
+    // });
+
+    // 최소값
+    // const min = await this.userRepository.minimum('count', {
+    //   id: LessThan(20),
+    // });
+
+    // 최대값
+    // const max = await this.userRepository.maximum('count', {
+    //   id: LessThan(20),
+    // });
+
+    // find / findOne
+    // const users = await this.userRepository.find({});
+    // const userOne = await this.userRepository.findOne({
+    //   where: {
+    //     id: 3,
+    //   },
+    // });
+
+    const usersAndCount = await this.userRepository.findAndCount({
+      take: 3,
+      order: {
+        id: 'ASC',
+      },
+    });
+
+    return usersAndCount;
+  }
+
   @Post('users')
   async postUser() {
     for (let i = 0; i < 100; i++) {
@@ -98,9 +174,9 @@ export class AppController {
       // 오름차, 내림차순 정렬
       // ASC -> 오름차
       // DESC -> 내림차
-      // order: {
-      //   id: 'DESC',
-      // },
+      order: {
+        id: 'ASC',
+      },
       // 정렬 후 처음 몇 개를 제외할지 선택(기본값은 0)
       // skip: 0,
       // 정렬 후 처음 몇 개를 가져올지 선택(기본값은 0)
